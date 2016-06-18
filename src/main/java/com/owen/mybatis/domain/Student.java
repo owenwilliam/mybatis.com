@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * 实体类 Student
  * @author OwenWilliam 2016-6-18
- * @since
+ * @since Entity
  * @version v1.0.0
  *
  */

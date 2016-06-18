@@ -14,7 +14,10 @@ import com.owen.mybatis.domain.Student;
 
 
 /**
- * @author Siva
+ * 测试类
+ * @author OwenWilliam 2016-6-18
+ * @since
+ * @version v1.0.0
  *
  */
 public class StudentServiceTest 

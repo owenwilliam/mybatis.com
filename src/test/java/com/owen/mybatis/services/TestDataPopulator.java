@@ -15,7 +15,10 @@ import com.owen.mybatis.util.MyBatisSqlSessionFactory;
 
 
 /**
- * @author Siva
+ * 测试前操作
+ * @author OwenWilliam 2016-6-18
+ * @since
+ * @version v1.0.0
  *
  */
 public class TestDataPopulator 

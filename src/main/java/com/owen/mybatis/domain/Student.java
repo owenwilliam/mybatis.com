@@ -4,6 +4,7 @@ import java.util.Date;
 
 /**
  * 实体类 Student
+ * 参数的名字可以不与数据中的一个具体配置在xml中，要相对应就ok了
  * @author OwenWilliam 2016-6-18
  * @since Entity
  * @version v1.0.0

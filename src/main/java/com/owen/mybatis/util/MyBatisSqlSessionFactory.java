@@ -72,7 +72,7 @@ public class MyBatisSqlSessionFactory
 	}
 	
 	/**
-	 * 数据库连接
+	 * 数据库连接，这个只是测试中应用
 	 * @return
 	 */
 	public static Connection getConnection() 

@@ -11,7 +11,7 @@ import com.owen.mybatis.mappers.StudentMapper;
 import com.owen.mybatis.util.MyBatisSqlSessionFactory;
 
 /**
- * Student的业务 层操作
+ * Student的业务 层操作,具体操作
  * @author OwenWilliam 2016-6-18
  * @since
  * @version v1.0.0

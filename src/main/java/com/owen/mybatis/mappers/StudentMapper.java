@@ -6,6 +6,10 @@ import java.util.List;
 import com.owen.mybatis.domain.Student;
 /**
  * 服务层操作 Strudent 接口
+ * 与StudentMapper.xml中SQL的id要对应上
+ * 查找所：StudentResult
+ * 查找个体：Student
+ * 参数也要对应xml中的id
  * @author OwenWilliam 2016-6-18
  * @since
  * @version v1.0.0

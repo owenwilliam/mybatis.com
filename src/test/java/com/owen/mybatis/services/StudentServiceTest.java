@@ -1,9 +1,9 @@
 package com.owen.mybatis.services;
 
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.junit.AfterClass;
 
 import static org.junit.Assert.*;
@@ -11,17 +11,18 @@ import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.owen.mybatis.domain.PhoneNumber;
 import com.owen.mybatis.domain.Student;
-import com.owen.mybatis.util.MyBatisUtil;
 
 /**
- * 测试类
+ * 测试Student
  * 
- * @author OwenWilliam 2016-6-18
+ * @author OwenWilliam 20106-6-20
  * @since
- * @version v1.0.0
+ * @version v3.0.0
  *
  */
+
 public class StudentServiceTest
 {
 	private static StudentService studentService;
@@ -29,13 +30,8 @@ public class StudentServiceTest
 	@BeforeClass
 	public static void setup()
 	{
+		studentService = new StudentService();
 		TestDataPopulator.initDatabase();
-		SqlSessionFactory sqlSessionFactory = null;
-		// Use this if you want XML based configuration
-		sqlSessionFactory = MyBatisUtil.getSqlSessionFactoryUsingXML();
-
-		// Use this if you want to use Java API configuration
-		studentService = new StudentService(sqlSessionFactory);
 	}
 
 	@AfterClass
@@ -62,39 +58,65 @@ public class StudentServiceTest
 	{
 		Student student = studentService.findStudentById(1);
 		assertNotNull(student);
+		// System.out.println(student);
 	}
 
 	@Test
-	public void testCreateUStudent()
+	public void testFindStudentWithAddressById()
 	{
-		Student student = new Student();
-		int id = 4;
-		student.setStudId(id);
-		student.setName("student_" + id);
-		student.setEmail("student_" + id + "gmail.com");
-		student.setDob(new Date());
-		studentService.createStudent(student);
-		Student newStudent = studentService.findStudentById(id);
-		assertNotNull(newStudent);
-		assertEquals("student_" + id, newStudent.getName());
-		assertEquals("student_" + id + "gmail.com", newStudent.getEmail());
+		Student student = studentService.findStudentWithAddressById(1);
+		assertNotNull(student);
+		// System.out.println(student);
+	}
+
+	@Test
+	public void testCreateStudent()
+	{
+		Student stud = new Student();
+		long ts = System.currentTimeMillis();
+		stud.setName("stud_" + ts);
+		stud.setEmail("stud_" + ts + "@gmail.com");
+		stud.setPhone(new PhoneNumber("123-456-7890"));
+		Student student = studentService.createStudent(stud);
+		assertNotNull(student);
+		assertEquals("stud_" + ts, student.getName());
+		assertEquals("stud_" + ts + "@gmail.com", student.getEmail());
+		// System.out.println("Created Student:"+student);
+
+	}
+
+	@Test
+	public void testCreateStudentWithMap()
+	{
+		Map<String, Object> studMap = new HashMap<String, Object>();
+		long ts = System.currentTimeMillis();
+		studMap.put("name", "stud_" + ts);
+		studMap.put("email", "stud_" + ts + "@gmail.com");
+		studMap.put("phone", null);
+		studentService.createStudentWithMap(studMap);
 	}
 
 	@Test
 	public void testUpdateStudent()
 	{
-		int id = 2;
-		Student student = studentService.findStudentById(id);
-		student.setStudId(id);
-		student.setName("student_" + id);
-		student.setEmail("student_" + id + "gmail.com");
-		Date now = new Date();
-		student.setDob(now);
-		studentService.updateStudent(student);
-		Student updatedStudent = studentService.findStudentById(id);
+		Student stud = new Student();
+		long ts = System.currentTimeMillis();
+		stud.setStudId(2);
+		stud.setName("stud_" + ts);
+		stud.setEmail("stud_" + ts + "@gmail.com");
+		Student updatedStudent = studentService.updateStudent(stud);
 		assertNotNull(updatedStudent);
-		assertEquals("student_" + id, updatedStudent.getName());
-		assertEquals("student_" + id + "gmail.com", updatedStudent.getEmail());
+		assertEquals("stud_" + ts, updatedStudent.getName());
+		assertEquals("stud_" + ts + "@gmail.com", updatedStudent.getEmail());
 
 	}
+
+	@Test
+	public void testDeleteStudent()
+	{
+		boolean deleteStudent = studentService.deleteStudent(3);
+		// assertTrue(deleteStudent);
+		// System.out.println("deleteStudent:"+deleteStudent);
+	}
+
 }

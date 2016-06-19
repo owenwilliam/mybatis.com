@@ -2,21 +2,14 @@ package com.owen.mybatis.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.util.Properties;
 
-import javax.sql.DataSource;
-
+import org.apache.ibatis.datasource.DataSourceFactory;
 import org.apache.ibatis.io.Resources;
-import org.apache.ibatis.mapping.Environment;
-import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.apache.ibatis.transaction.TransactionFactory;
-import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
-import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
-
-import com.owen.mybatis.domain.Student;
-import com.owen.mybatis.mappers.StudentMapper;
-import com.owen.mybatis.typehandlers.PhoneTypeHandler;
 
 /**
  * 
@@ -28,69 +21,62 @@ import com.owen.mybatis.typehandlers.PhoneTypeHandler;
 
 public class MyBatisUtil
 {
-	private static SqlSessionFactory xmlSqlSessionFactory;
-	private static SqlSessionFactory javaSqlSessionFactory;
+	private static final String DEFAULT_MYBATIS_CONFIG_FILE = "mybatis-config.xml";
+	private static SqlSessionFactory sqlSessionFactory;
+
+	private static final Properties PROPERTIES = new Properties();
+
+	static
+	{
+		try
+		{
+			InputStream is = DataSourceFactory.class
+					.getResourceAsStream("/application.properties");
+			PROPERTIES.load(is);
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * 读取XNL的文件配置
 	 * 
 	 * @return
 	 */
-	public static SqlSessionFactory getSqlSessionFactoryUsingXML()
+	public static SqlSessionFactory getSqlSessionFactory()
 	{
-		if (xmlSqlSessionFactory == null)
+		if (sqlSessionFactory == null)
 		{
-			InputStream inputStream;
 			try
 			{
-				inputStream = Resources
-						.getResourceAsStream("mybatis-config.xml");
-				xmlSqlSessionFactory = new SqlSessionFactoryBuilder()
+				InputStream inputStream = Resources
+						.getResourceAsStream(DEFAULT_MYBATIS_CONFIG_FILE);
+				sqlSessionFactory = new SqlSessionFactoryBuilder()
 						.build(inputStream);
 			} catch (IOException e)
 			{
-				throw new RuntimeException(e);
+				throw new RuntimeException(e.getCause());
 			}
 		}
-		return xmlSqlSessionFactory;
+		return sqlSessionFactory;
 	}
 
-	/**
-	 * 使用JavaAPI的设置
-	 * 
-	 * @return
-	 */
-	public static SqlSessionFactory getSqlSessionFactoryUsingJavaAPI()
+	public static Connection getConnection()
 	{
-		if (javaSqlSessionFactory == null)
+		String driver = PROPERTIES.getProperty("jdbc.driverClassName");
+		String url = PROPERTIES.getProperty("jdbc.url");
+		String username = PROPERTIES.getProperty("jdbc.username");
+		String password = PROPERTIES.getProperty("jdbc.password");
+		Connection connection = null;
+		try
 		{
-			try
-			{
-				DataSource dataSource = DataSourceFactory.getDataSource();
-				// 使用JDBC的形式--用于Tomcat，也可以用ManagedTransactionFactory()--用于JBOSS、webLog
-				// and so on
-				TransactionFactory transactionFactory = new JdbcTransactionFactory();
-				// 你是使用哪一套数据库
-				Environment environment = new Environment("development",
-						transactionFactory, dataSource);
-				Configuration configuration = new Configuration(environment);
-				// 注册别名
-				configuration.getTypeAliasRegistry().registerAlias("student",
-						Student.class);
-				// 注册Handler
-				configuration.getTypeHandlerRegistry().register(
-						PhoneTypeHandler.class);
-				// 添加Mapper有对象
-				configuration.addMapper(StudentMapper.class);
-				javaSqlSessionFactory = new SqlSessionFactoryBuilder()
-						.build(configuration);
-
-			} catch (Exception e)
-			{
-				throw new RuntimeException(e);
-			}
+			Class.forName(driver);
+			connection = DriverManager.getConnection(url, username, password);
+		} catch (Exception e)
+		{
+			throw new RuntimeException(e);
 		}
-		return javaSqlSessionFactory;
+		return connection;
 	}
-
 }

@@ -1,6 +1,7 @@
 package com.owen.mybatis.mappers;
 
 import java.util.List;
+import java.util.Map;
 
 import com.owen.mybatis.domain.Student;
 
@@ -32,6 +33,14 @@ public interface StudentMapper
 	Student findStudentById(Integer id);
 
 	/**
+	 * 查找学生带有地址
+	 * 
+	 * @param id
+	 * @return
+	 */
+	Student selectStudentWithAddress(int id);
+
+	/**
 	 * 插入新的Student
 	 * 
 	 * @param student
@@ -39,9 +48,24 @@ public interface StudentMapper
 	void insertStudent(Student student);
 
 	/**
+	 * 插入学生
+	 * 
+	 * @param map
+	 */
+	void insertStudentWithMap(Map<String, Object> map);
+
+	/**
 	 * 更新Student
 	 * 
 	 * @param student
 	 */
 	void updateStudent(Student student);
+
+	/**
+	 * 删除学生
+	 * 
+	 * @param id
+	 * @return
+	 */
+	int deleteStudent(int id);
 }

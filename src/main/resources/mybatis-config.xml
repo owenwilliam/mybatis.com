@@ -9,7 +9,9 @@
 	  <typeAliases>
 	  	<package name="com.owen.mybatis.domain"/>
 	  </typeAliases>
-	
+	<typeHandlers>
+		<typeHandler handler="com.owen.mybatis.typehandlers.PhoneTypeHandler" />
+	</typeHandlers>
 	  <environments default="development">
 	    <environment id="development">
 	      <transactionManager type="JDBC"/>

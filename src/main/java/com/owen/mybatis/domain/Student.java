@@ -1,5 +1,6 @@
 package com.owen.mybatis.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -11,36 +12,31 @@ import java.util.Date;
  *
  */
 
-public class Student
+public class Student implements Serializable
 {
+	private static final long serialVersionUID = 1L;
 	private Integer studId;
 	private String name;
 	private String email;
-	private Date dob;
-
-	public Student()
-	{
-
-	}
-
-	public Student(Integer studId)
-	{
-		this.studId = studId;
-	}
-
-	public Student(Integer studId, String name, String email, Date dob)
-	{
-		this.studId = studId;
-		this.name = name;
-		this.email = email;
-		this.dob = dob;
-	}
+	private PhoneNumber phone;
+	private Address address;
 
 	@Override
 	public String toString()
 	{
 		return "Student [studId=" + studId + ", name=" + name + ", email="
-				+ email + ", dob=" + dob + "]";
+				+ email + ", phone="
+				+ (phone == null ? null : phone.getAsString()) + ", address="
+				+ address + "]";
+	}
+
+	public Student()
+	{
+	}
+
+	public Student(Integer id)
+	{
+		this.studId = id;
 	}
 
 	public Integer getStudId()
@@ -48,9 +44,9 @@ public class Student
 		return studId;
 	}
 
-	public void setStudId(Integer studId)
+	public void setStudId(Integer id)
 	{
-		this.studId = studId;
+		this.studId = id;
 	}
 
 	public String getName()
@@ -73,14 +69,23 @@ public class Student
 		this.email = email;
 	}
 
-	public Date getDob()
+	public Address getAddress()
 	{
-		return dob;
+		return address;
 	}
 
-	public void setDob(Date dob)
+	public void setAddress(Address address)
 	{
-		this.dob = dob;
+		this.address = address;
 	}
 
+	public PhoneNumber getPhone()
+	{
+		return phone;
+	}
+
+	public void setPhone(PhoneNumber phone)
+	{
+		this.phone = phone;
+	}
 }

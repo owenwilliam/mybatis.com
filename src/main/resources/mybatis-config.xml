@@ -23,7 +23,9 @@
 	  </environments>
 	  
 	  <mappers>
-	    <mapper resource="com/owen/mybatis/mappers/StudentMapper.xml"/>
+	   <!--  <mapper resource="com/owen/mybatis/mappers/StudentMapper.xml"/> -->
+	      <!-- <mapper class="com.owen.mybatis.mappers.StudentMapper"/> -->
+	      <package name="com.owen.mybatis.mappers"/>
 	  </mappers>
   	
   	

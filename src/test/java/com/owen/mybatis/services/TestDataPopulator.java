@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.owen.mybatis.services;
 
 import java.io.Reader;
@@ -11,14 +8,13 @@ import org.apache.ibatis.jdbc.ScriptRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.owen.mybatis.util.DataSourceFactory;
+import com.owen.mybatis.util.MyBatisUtil;
 
 /**
- * 测试前操作
  * 
- * @author OwenWilliam 2016-6-18
+ * @author OwenWilliam 2016-6-19
  * @since
- * @version v1.0.0
+ * @version v2.0.0
  *
  */
 public class TestDataPopulator
@@ -31,16 +27,13 @@ public class TestDataPopulator
 		initDatabase();
 	}
 
-	/**
-	 * 初始化数据库：删除表，创建 表
-	 */
 	public static void initDatabase()
 	{
 		Connection connection = null;
 		Reader reader = null;
 		try
 		{
-			connection = DataSourceFactory.getDataSource().getConnection();
+			connection = MyBatisUtil.getConnection();
 			ScriptRunner scriptRunner = new ScriptRunner(connection);
 			reader = Resources.getResourceAsReader("sql/drop_tables.sql");
 			scriptRunner.runScript(reader);

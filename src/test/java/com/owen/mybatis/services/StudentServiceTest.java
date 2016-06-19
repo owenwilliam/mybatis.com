@@ -1,100 +1,131 @@
 package com.owen.mybatis.services;
 
-import java.util.Date;
-import java.util.List;
-
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.junit.AfterClass;
-
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.owen.mybatis.domain.PhoneNumber;
 import com.owen.mybatis.domain.Student;
-import com.owen.mybatis.util.MyBatisUtil;
 
-/**
- * 测试类
- * 
- * @author OwenWilliam 2016-6-18
- * @since
- * @version v1.0.0
- *
- */
-public class StudentServiceTest
+
+public class StudentServiceTest 
 {
+
 	private static StudentService studentService;
-
+	
 	@BeforeClass
-	public static void setup()
-	{
+	public static void setup() {
+		studentService = new StudentService();
 		TestDataPopulator.initDatabase();
-		SqlSessionFactory sqlSessionFactory = null;
-		// Use this if you want XML based configuration
-		sqlSessionFactory = MyBatisUtil.getSqlSessionFactoryUsingXML();
-
-		// Use this if you want to use Java API configuration
-		studentService = new StudentService(sqlSessionFactory);
 	}
-
+	
 	@AfterClass
-	public static void teardown()
-	{
+	public static void teardown() {
 		studentService = null;
 	}
-
+	
 	@Test
-	public void testFindAllStudents()
-	{
+	public void testFindAllStudents() {
 		List<Student> students = studentService.findAllStudents();
 		assertNotNull(students);
 		for (Student student : students)
 		{
 			assertNotNull(student);
-			// System.out.println(student);
+			//System.out.println(student);
 		}
-
 	}
 
 	@Test
-	public void testFindStudentById()
-	{
+	public void testFindStudentById() {
 		Student student = studentService.findStudentById(1);
 		assertNotNull(student);
+		assertNotNull(student.getAddress());
+		//System.out.println(student);
+		//System.out.println(student.getAddress().getAddrId()+":"+student.getAddress().getCity());
+		
 	}
 
 	@Test
-	public void testCreateUStudent()
-	{
-		Student student = new Student();
-		int id = 4;
-		student.setStudId(id);
-		student.setName("student_" + id);
-		student.setEmail("student_" + id + "gmail.com");
-		student.setDob(new Date());
-		studentService.createStudent(student);
-		Student newStudent = studentService.findStudentById(id);
-		assertNotNull(newStudent);
-		assertEquals("student_" + id, newStudent.getName());
-		assertEquals("student_" + id + "gmail.com", newStudent.getEmail());
+	public void testFindStudentWithAddressById() {
+		Student student = studentService.findStudentWithAddressById(2);
+		assertNotNull(student);
+		assertNotNull(student.getAddress());
+		//System.out.println(student.getAddress().getAddrId()+":"+student.getAddress().getCity());
 	}
 
 	@Test
-	public void testUpdateStudent()
-	{
-		int id = 2;
-		Student student = studentService.findStudentById(id);
-		student.setStudId(id);
-		student.setName("student_" + id);
-		student.setEmail("student_" + id + "gmail.com");
-		Date now = new Date();
-		student.setDob(now);
-		studentService.updateStudent(student);
-		Student updatedStudent = studentService.findStudentById(id);
-		assertNotNull(updatedStudent);
-		assertEquals("student_" + id, updatedStudent.getName());
-		assertEquals("student_" + id + "gmail.com", updatedStudent.getEmail());
-
+	public void testCreateStudent() {
+		Student stud = new Student();
+		long ts = System.currentTimeMillis();
+		stud.setName("stud_"+ts);
+		stud.setEmail("stud_"+ts+"@gmail.com");
+		stud.setPhone(new PhoneNumber("123-456-7890"));
+		Student student = studentService.createStudent(stud);
+		assertNotNull(student);
+		assertEquals("stud_"+ts, student.getName());
+		assertEquals("stud_"+ts+"@gmail.com", student.getEmail());
+		//System.out.println("CreatedStudent: "+student);
 	}
+
+	@Test
+	public void testCreateStudentWithMap() {
+		Map<String, Object> studMap = new HashMap<String, Object>();
+		long ts = System.currentTimeMillis();
+		studMap.put("name","stud_"+ts);
+		studMap.put("email","stud_"+ts+"@gmail.com");
+		studMap.put("phone",null);
+		studentService.createStudentWithMap(studMap);
+	}
+
+	@Test
+	public void testUpdateStudent() {
+		Student stud = new Student();
+		long ts = System.currentTimeMillis();
+		stud.setStudId(2);
+		stud.setName("studddd_"+ts);
+		stud.setEmail("studddd_"+ts+"@gmail.com");
+		Student student = studentService.updateStudent(stud);
+		assertNotNull(student);
+		assertEquals("studddd_"+ts, student.getName());
+		assertEquals("studddd_"+ts+"@gmail.com", student.getEmail());
+		assertEquals(new Integer(2), student.getStudId());
+		
+		//System.out.println("UpdatedStudent: "+student);
+	}
+
+	@Test
+	public void testDeleteStudent() {
+		boolean deleted = studentService.deleteStudent(3);
+		//assertTrue(deleted);
+		//System.out.println("deleteStudent:"+deleted);
+	}
+
+	@Test
+	public void testFindStudentMapById() {
+		Map<String, Object> studentMap = studentService.findStudentMapById(1);
+		assertNotNull(studentMap);
+		//System.out.println(studentMap);
+	}
+
+	@Test
+	public void testFindAllStudentsMap() {
+		List<Map<String,Object>> studentMapList = studentService.findAllStudentsMap();
+    	for(Map<String,Object> studentMap : studentMapList)
+    	{
+    		assertNotNull(studentMap);
+    		/*
+    		System.out.println("id :"+studentMap.get("id"));
+    		System.out.println("name :"+studentMap.get("name"));
+    		System.out.println("email :"+studentMap.get("email"));
+    		System.out.println("phone :"+studentMap.get("phone"));
+    		*/
+    	}
+	}
+
 }

@@ -1,5 +1,7 @@
 package com.owen.mybatis.domain;
 
+import java.io.Serializable;
+
 /**
  * 实体 ： Phone
  * 
@@ -8,8 +10,9 @@ package com.owen.mybatis.domain;
  * @version V2.0.0
  *
  */
-public class PhoneNumber
+public class PhoneNumber implements Serializable
 {
+	private static final long serialVersionUID = 1L;
 	private String countryCode;
 	private String stateCode;
 	private String number;

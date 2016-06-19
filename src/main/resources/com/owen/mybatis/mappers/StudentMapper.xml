@@ -4,28 +4,20 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
 <mapper namespace="com.owen.mybatis.mappers.StudentMapper">
-	
-	<resultMap type="Student" id="StudentResult">
+	<resultMap type="Address" id="AddressResult">
+  		<id property="addrId" column="addr_id"/>
+		<result property="street" column="street"/>
+		<result property="city" column="city"/>
+		<result property="state" column="state"/>
+		<result property="zip" column="zip"/>
+		<result property="country" column="country"/>
+  	</resultMap>
+  	
+  	<resultMap type="Student" id="StudentWithAddressResult">
 		<id 	property="studId" column="stud_id"/>
 		<result property="name" column="name"/>
 		<result property="email" column="email"/>
-		<result property="dob" column="dob"/>
+		<association property="address" resultMap="AddressResult"/>
 	</resultMap>
-  
-  	<select id="findAllStudents" resultMap="StudentResult">
-    	select * from Students
-  	</select>
-  	
-  	<select id="findStudentById" parameterType="int" resultType="Student">
-    	select stud_id as studId, name, email, dob from Students where stud_id=#{studId}
-  	</select>
-  	
-  	<insert id="insertStudent" parameterType="Student">
-  		INSERT INTO STUDENTS(STUD_ID,NAME,EMAIL,DOB) VALUES(#{studId},#{name},#{email},#{dob})
-  	</insert>
-  	
-  	<update id="updateStudent" parameterType="Student">
-  		UPDATE STUDENTS SET NAME=#{name}, EMAIL=#{email}, DOB=#{dob} WHERE STUD_ID=#{studId}
-  	</update>
   	
 </mapper>

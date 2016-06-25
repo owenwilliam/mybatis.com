@@ -9,25 +9,28 @@ import java.util.Map;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.owen.mybatis.domain.Address;
 import com.owen.mybatis.domain.PhoneNumber;
 import com.owen.mybatis.domain.Student;
 
 
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations="classpath:applicationContext.xml")
 public class StudentServiceTest 
 {
-
-	private static StudentService studentService;
+	@Autowired
+	private StudentService studentService;
 	
 	@BeforeClass
 	public static void setup() {
-		studentService = new StudentService();
 		TestDataPopulator.initDatabase();
-	}
-	
-	@AfterClass
-	public static void teardown() {
-		studentService = null;
 	}
 	
 	@Test
@@ -55,17 +58,26 @@ public class StudentServiceTest
 	public void testFindStudentWithAddressById() {
 		Student student = studentService.findStudentWithAddressById(2);
 		assertNotNull(student);
-		assertNotNull(student.getAddress());
 		//System.out.println(student.getAddress().getAddrId()+":"+student.getAddress().getCity());
 	}
 
 	@Test
 	public void testCreateStudent() {
+		/*Address address = new Address();
+		address.setStreet("Quaker Ridge Rd.");
+		address.setCity("Bethel");
+		address.setState("Brooklyn");
+		address.setZip("06801");
+		address.setCountry("USA");*/
+		
+		Address address = new Address(1,"Quaker Ridge Rd.","Bethel","Brooklyn","06801","USA");
+		
 		Student stud = new Student();
 		long ts = System.currentTimeMillis();
 		stud.setName("stud_"+ts);
 		stud.setEmail("stud_"+ts+"@gmail.com");
 		stud.setPhone(new PhoneNumber("123-456-7890"));
+		stud.setAddress(address);
 		Student student = studentService.createStudent(stud);
 		assertNotNull(student);
 		assertEquals("stud_"+ts, student.getName());
@@ -73,6 +85,25 @@ public class StudentServiceTest
 		//System.out.println("CreatedStudent: "+student);
 	}
 
+	@Test(expected=DataAccessException.class)
+	public void testCreateStudentForException() {
+		Address address = new Address();
+		address.setStreet("Quaker Ridge Rd.");
+		address.setCity("Bethel");
+		address.setState("Brooklyn");
+		address.setZip("06801");
+		address.setCountry("USA");
+		
+		Student stud = new Student();
+		long ts = System.currentTimeMillis();
+		stud.setName("stud_"+ts);
+		stud.setEmail("timothy@gmail.com");
+		stud.setPhone(new PhoneNumber("123-456-7890"));
+		stud.setAddress(address);
+		studentService.createStudent(stud);
+		fail("You should not reach here");
+	}
+	
 	@Test
 	public void testCreateStudentWithMap() {
 		Map<String, Object> studMap = new HashMap<String, Object>();
@@ -102,7 +133,7 @@ public class StudentServiceTest
 	@Test
 	public void testDeleteStudent() {
 		boolean deleted = studentService.deleteStudent(3);
-		//assertTrue(deleted);
+	//	assertTrue(deleted);
 		//System.out.println("deleteStudent:"+deleted);
 	}
 

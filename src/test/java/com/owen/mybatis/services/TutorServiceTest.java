@@ -7,25 +7,24 @@ import java.util.List;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.owen.mybatis.domain.Tutor;
 
-
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations="classpath:applicationContext.xml")
 public class TutorServiceTest 
 {
-
-	private static TutorService tutorService;
+	@Autowired
+	private TutorService tutorService;
 	
 	@BeforeClass
 	public static void setup() {
-		tutorService = new TutorService();
 		TestDataPopulator.initDatabase();
 	}
-	
-	@AfterClass
-	public static void teardown() {
-		tutorService = null;
-	}
+
 	
 	@Test
 	public void testFindAllTutors() {
@@ -59,7 +58,6 @@ public class TutorServiceTest
 		tutor.setEmail("siva@gmail.com");
 		tutor = tutorService.createTutor(tutor);
 		assertNotNull(tutor);
-		//System.out.println(tutor.getTutorId());
 	}
 
 	@Test

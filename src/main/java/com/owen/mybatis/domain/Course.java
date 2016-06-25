@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 课程：一个Course程 对就多个Student   一个Turtor对应多个Course
+ * 课程：一个Course程 对就多个Student 一个Turtor对应多个Course
  * 
  * @author OwenWilliam 2016-6-20
  * @since

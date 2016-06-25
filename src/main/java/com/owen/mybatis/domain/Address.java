@@ -3,7 +3,7 @@ package com.owen.mybatis.domain;
 import java.io.Serializable;
 
 /**
- * 地址信息：Student与其是一对一    Tutor与其是一对一
+ * 地址信息：Student与其是一对一 Tutor与其是一对一
  * 
  * @author OwenWilliam 2016-6-20
  * @since

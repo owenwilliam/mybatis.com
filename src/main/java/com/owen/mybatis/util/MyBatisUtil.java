@@ -21,7 +21,6 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 public class MyBatisUtil
 {
-	private static final String DEFAULT_MYBATIS_CONFIG_FILE = "mybatis-config.xml";
 	private static SqlSessionFactory sqlSessionFactory;
 
 	private static final Properties PROPERTIES = new Properties();
@@ -37,29 +36,6 @@ public class MyBatisUtil
 		{
 			e.printStackTrace();
 		}
-	}
-
-	/**
-	 * 读取XNL的文件配置
-	 * 
-	 * @return
-	 */
-	public static SqlSessionFactory getSqlSessionFactory()
-	{
-		if (sqlSessionFactory == null)
-		{
-			try
-			{
-				InputStream inputStream = Resources
-						.getResourceAsStream(DEFAULT_MYBATIS_CONFIG_FILE);
-				sqlSessionFactory = new SqlSessionFactoryBuilder()
-						.build(inputStream);
-			} catch (IOException e)
-			{
-				throw new RuntimeException(e.getCause());
-			}
-		}
-		return sqlSessionFactory;
 	}
 
 	public static Connection getConnection()
@@ -79,4 +55,24 @@ public class MyBatisUtil
 		}
 		return connection;
 	}
+
+	public static SqlSessionFactory getSqlSessionFactory()
+	{
+		if (sqlSessionFactory == null)
+		{
+			InputStream inputStream;
+			try
+			{
+				inputStream = Resources
+						.getResourceAsStream("mybatis-config.xml");
+				sqlSessionFactory = new SqlSessionFactoryBuilder()
+						.build(inputStream);
+			} catch (IOException e)
+			{
+				throw new RuntimeException(e.getCause());
+			}
+		}
+		return sqlSessionFactory;
+	}
+
 }
